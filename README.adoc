@@ -29,4 +29,7 @@ void freeRBTree(RBTree** sptr);
 void insertFixUp(RBTree* s, RBTree* z);
 void LeftRotate(RBTree* s, RBTree* x);
 void RightRotate(RBTree* s, RBTree* y);
+void Transplant(RBTree* s, RBTree* u, RBTree* v);
+void DeleteFixup(RBTree* s, RBTree* x);
+int TreeMinimum(RBTree* x);
 ----
