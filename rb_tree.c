@@ -17,11 +17,18 @@ typedef struct RedBlackTreestruct{
 }RBTree;
 
 void put(RBTree* s, int key, int data);
-int get(RBTree* s, int key);
-int contains(RBTree* s, int key);
+int get(RBTree* root, int key);
+int contains(RBTree* root, int key);
 void delete(RBTree* s, int key);
 int isEmpty(RBTree* s);
 int size(RBTree* s);
+void freeRBTree(RBTree** sptr);
+void insertFixUp(RBTree* s, RBTree* z);
+void LeftRotate(RBTree* s, RBTree* x);
+void RightRotate(RBTree* s, RBTree* y);
+void Transplant(RBTree* s, RBTree* u, RBTree* v);
+void DeleteFixup(RBTree* s, RBTree* x);
+int TreeMinimum(RBTree* x);
 
 // Definiciones ========================================================
 
