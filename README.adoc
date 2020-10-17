@@ -1,0 +1,31 @@
+= Red-Black-Tree
+:stem: latexmath
+:toclevels: 5
+:sectnums:
+:sectnumlevels: 5
+:toc:
+
+== Implementación del árbol rojo-negros
+
+[source,c]
+----
+typedef struct RedBlackTreeStruct{
+  struct RedBlackTreeStruct* father;
+  struct RedBlackTreeStruct* right;
+  struct RedBlackTreeStruct* left;
+  int key;
+  int data;
+  int color;
+}RBTree;
+
+void put(RBTree* root, int key, int data);
+int get(RBTree* root, int key);
+int contains(RBTree* root, int key);
+void delete(RBTree* s, int key);
+int isEmpty(RBTree* s);
+int size(RBTree* s);
+void freeRBTree(RBTree** sptr);
+void insertFixUp(RBTree* s, RBTree* z);
+void LeftRotate(RBTree* s, RBTree* x);
+void RightRotate(RBTree* s, RBTree* y);
+----
