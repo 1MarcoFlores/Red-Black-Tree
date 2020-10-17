@@ -182,4 +182,58 @@ void InorderTree(RBTree *s){
     InorderTree(s->der);
 }
 
+int get(RBTree* root, int key)
+{
+	RBTree* node = root;
+	while(node->izq != NULL || node->der != NULL){
+		if(key > node->key){
+			if(node->der != NULL){
+				node = node->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < node->key){
+			if(node->izq != NULL){
+				node = node->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return node->key;
+		}
+	}
+	return -1;
+}
+
+int contains(RBTree* root, int key)
+{
+	RBTree* node = root;
+	while(node->izq != NULL || node->der != NULL){
+		if(key > node->key){
+			if(node->der != NULL){
+				node = node->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < node->key){
+			if(node->izq != NULL){
+				node = node->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return 0;
+		}
+	}
+	return -1;
+}
+
 #endif
