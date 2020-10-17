@@ -12,7 +12,7 @@ typedef struct RedBlackTreestruct{
 	struct RedBlackTreestruct* padre;
 	int data;//Valor del dato
 	int key;//La llave para buscar al dato
-	int color;//Color del ARN
+	char color; //Color del ARN
 }RBTree;
 
 void put(RBTree* s, int key, int data);
