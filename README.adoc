@@ -10,12 +10,12 @@
 [source,c]
 ----
 typedef struct RedBlackTreeStruct{
-  struct RedBlackTreeStruct* father;
-  struct RedBlackTreeStruct* right;
-  struct RedBlackTreeStruct* left;
+  struct RedBlackTreeStruct* padre;
+  struct RedBlackTreeStruct* izq;
+  struct RedBlackTreeStruct* der;
   int key;
   int data;
-  int color;
+  char color;
 }RBTree;
 
 void put(RBTree* root, int key, int data);
