@@ -15,6 +15,7 @@ typedef struct RedBlackTreeStruct{
   struct RedBlackTreeStruct* der;
   int key;
   int data;
+  unsigned int nodes;
   char color;
 }RBTree;
 
