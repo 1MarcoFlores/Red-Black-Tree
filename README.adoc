@@ -10,12 +10,13 @@
 [source,c]
 ----
 typedef struct RedBlackTreeStruct{
-  struct RedBlackTreeStruct* father;
-  struct RedBlackTreeStruct* right;
-  struct RedBlackTreeStruct* left;
+  struct RedBlackTreeStruct* padre;
+  struct RedBlackTreeStruct* izq;
+  struct RedBlackTreeStruct* der;
   int key;
   int data;
-  int color;
+  unsigned int nodes;
+  char color;
 }RBTree;
 
 void put(RBTree* root, int key, int data);
@@ -28,4 +29,7 @@ void freeRBTree(RBTree** sptr);
 void insertFixUp(RBTree* s, RBTree* z);
 void LeftRotate(RBTree* s, RBTree* x);
 void RightRotate(RBTree* s, RBTree* y);
+void Transplant(RBTree* s, RBTree* u, RBTree* v);
+void DeleteFixup(RBTree* s, RBTree* x);
+int TreeMinimum(RBTree* x);
 ----
