@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 // Prototipos ==========================================================
 
@@ -198,7 +199,7 @@ int get(RBTree* root, int key)
 				node = node->der;
 			}
 			else{
-				return -1;
+				return INT_MAX;
 			}
 		}
 		else if(key < node->key){
@@ -206,14 +207,14 @@ int get(RBTree* root, int key)
 				node = node->izq;
 			}
 			else{
-				return -1;
+				return INT_MAX;
 			}
 		}
 		else{
 			return node->key;
 		}
 	}
-	return -1;
+	return INT_MAX;
 }
 
 int contains(RBTree* root, int key)
