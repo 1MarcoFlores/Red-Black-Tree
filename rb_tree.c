@@ -12,7 +12,8 @@ typedef struct RedBlackTreestruct{
 	struct RedBlackTreestruct* padre;
 	int data;//Valor del dato
 	int key;//La llave para buscar al dato
-	int color;//Color del ARN
+	unsigned int nodes;
+	char color; //Color del ARN
 }RBTree;
 
 void put(RBTree* s, int key, int data);
@@ -22,8 +23,377 @@ void delete(RBTree* s, int key);
 int isEmpty(RBTree* s);
 int size(RBTree* s);
 
+///nuevo 
+RBTree* New_RBTree(void);
+RBTree*  Tree_Succesor(RBTree *s);
+RBTree*  Tree_Minimum(RBTree *s);
+RBTree*  Root(RBTree *s);
+RBTree*  get_node(RBTree *s,int key);
+void delete(RBTree* s, int key);
+void RB_Delete_Fixup(RBTree *s,RBTree *x);
+
 // Definiciones ========================================================
 
+void put (RBTree *s, int key, int val){
+	RBTree *nodo=NULL,*x=NULL,*y=NULL;
+	int ban=0,ban2=1;
+	if(s->color=='M'){//Primer dato
+		s->data=val;
+		s->key=key;
+		s->color='B';
+	}else{//Nodo nuevo*/
+		nodo=(RBTree *)malloc(sizeof(RBTree));
+		if(nodo!=NULL){
+			
+			//Inicializar nodo nuevo
+			nodo->key=key;
+			nodo->data=val;
+			nodo->izq=NULL;
+			nodo->der=NULL;
+			nodo->padre=NULL;
+			nodo->color='R';
+			x=s;
+
+			while (x != NULL){
+				y = x;
+				if(key < x->key){
+					x = x->izq;
+				}else{
+					x = x->der;
+				}
+			}
+			
+			nodo->padre=y;
+			
+			if (key < y->key)
+				y->izq = nodo;
+			else
+				y->der= nodo;
+			
+			//nodo->color = 'R';
+
+			insertFixUp(s,nodo);
+		}else{
+			printf("Solicitud de memoria denegada\n");
+		}
+	}
+}
+
+void insertFixUp(RBTree *s, RBTree *z){
+	RBTree *y=NULL;
+	
+    while (z != s && z!=s->der && z!=s->izq && z->padre->color == 'R'){
+        if(z->padre && z->padre->padre && z->padre==z->padre->padre->izq){
+            y = z->padre->padre->der;
+            
+            if(!y && y->color == 'R'){
+				z->padre->color = 'B';
+				y->color = 'B';
+				z->padre->padre->color = 'R';
+				z = z->padre->padre;
+			}else{
+				if(z == z->padre->der) {
+					z = z->padre;
+					LeftRotate(s,z);
+				}
+					
+					z->padre->color = 'B';
+					z->padre->padre->color = 'R';
+					RightRotate(s,z->padre->padre);
+			}
+        }else{
+            y = z->padre->padre->izq;
+            
+            if(!y && y->color == 'R'){
+				z->padre->color = 'B';
+				y->color = 'B';
+				z->padre->padre->color = 'R';
+				z = z->padre->padre;
+			}else{
+				if(z == z->padre->izq) {
+					z = z->padre;
+					RightRotate(s,z);
+				}
+				z->padre->color = 'B';
+				z->padre->padre->color = 'R';
+				LeftRotate(s,z->padre->padre);
+			}
+		}
+	}
+    s->color = 'B';
+}
+
+void LeftRotate(RBTree *s, RBTree *x){
+	RBTree *y=NULL;
+	
+    if (!x || !x->der){
+        return ;
+    }
+    
+    y = x->der;
+    x->der = y->izq;
+
+    if(y->izq != NULL){
+        y->izq->padre = x;
+	}
+	
+    y->padre = x->padre;
+
+    if(x->padre== NULL){
+        s = y;
+    }else{
+		if(x == x->padre->izq){
+			x->padre->izq = y;
+		}else{
+			x->padre->der = y;
+		}
+	}
+   
+    y->izq = x;
+    x->padre = y;
+}
+
+
+void RightRotate(RBTree *s, RBTree *y){
+	RBTree *x=NULL;
+    
+    if (!y || !y->izq)
+        return ;
+    
+    x = y->izq;
+    y->izq = x->der;
+    
+    if(x->der!= NULL){
+        x->der->padre = y;
+    }
+    
+    x->padre = y->padre;
+    if(x->padre == NULL){
+        s = x;
+    }else{ 
+		if(y == y->padre->izq){
+			y->padre->izq = x;
+		}else{
+			y->padre->der = x;
+		}
+	}
+    x->der = y;
+    y->padre = x;
+}
+//INORDER-TREE-WALK
+void InorderTree(RBTree *s){
+    
+    if(s == NULL)
+        return;
+    InorderTree(s->izq);
+    printf("%c%d ", s->color,s->key);
+    
+    InorderTree(s->der);
+}
+
+int get(RBTree* root, int key)
+{
+	RBTree* node = root;
+	while(node->izq != NULL || node->der != NULL){
+		if(key > node->key){
+			if(node->der != NULL){
+				node = node->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < node->key){
+			if(node->izq != NULL){
+				node = node->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return node->key;
+		}
+	}
+	return -1;
+}
+
+int contains(RBTree* root, int key)
+{
+	RBTree* node = root;
+	while(node->izq != NULL || node->der != NULL){
+		if(key > node->key){
+			if(node->der != NULL){
+				node = node->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < node->key){
+			if(node->izq != NULL){
+				node = node->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return 0;
+		}
+	}
+	return -1;
+}
+
+
+
+void delete(RBTree* s, int key){
+    RBTree* y=NULL, *x=NULL;
+    RBTree* z=get_node(s,key);
+    if(z!=NULL){
+        if( z->izq==NULL || z->der==NULL )
+            y=s;
+        else
+            y=Tree_Succesor(s);
+
+        if(y!=NULL)
+            x=y->izq;
+        else
+            x=y->der;
+
+        x->padre=y->padre;
+
+        if(y->padre==NULL)
+            s=x;
+        else{
+            if(y==y->padre->der)
+                y->padre->der=x;
+            else
+                y->padre->izq=x;
+        }
+
+        if(y!=s){
+            s->key=y->key;
+            s->data=y->data;
+        }
+        if(y->color='B')
+            RB_Delete_Fixup(s,x);
+    }
+    else
+        printf("El elemento no esta en el arbol");
+}
+
+void RB_Delete_Fixup(RBTree *s, RBTree *x){
+    RBTree *w=NULL;
+
+    while(x->padre!=NULL && x->color=='B'){
+        if(x==x->padre->izq){
+            w=x->padre->der;
+            if(w->color=='R'){
+                w->color='B';
+                x->padre->color='R';
+                LeftRotate(s,x->padre);
+                w=x->padre->der;
+            }
+            if(w->izq->color=='B' && w->der->color=='B'){
+                w->color='R';
+                x=x->padre;
+            }
+            else{
+                if(w->der->color=='B'){
+                    w->izq->color='B';
+                    w->color='R';
+                    RightRotate(s,w);
+                    w=x->padre->der;
+                    w->color=x->padre->color;
+                    x->padre->color='B';
+                    w->der->color='B';
+                    LeftRotate(s,x->padre);
+                    x=s;
+                }
+            }
+        }
+        else{ w=x->padre->izq;
+            if(w->color=='R'){
+                w->color='B';
+                x->padre->color='R';
+                LeftRotate(s,x->padre);
+                w=x->padre->izq;
+            }
+            if(w->der->color=='B' && w->izq->color=='B'){
+                w->color='R';
+                x=x->padre;
+            }
+            else{
+                if(w->izq->color=='B'){
+                    w->der->color='B';
+                    w->color='R';
+                    RightRotate(s,w);
+                    w=x->padre->izq;
+                    w->color=x->padre->color;
+                    x->padre->color='B';
+                    w->izq->color='B';
+                    LeftRotate(s,x->padre);
+                    x=s;
+                }
+            }
+        }
+    }
+    x->color='B';
+}
+
+RBTree*  Tree_Minimum(RBTree *s){
+    RBTree* x=s;
+    while(x->izq!=NULL)
+        x=x->izq;
+    return x;
+}
+
+
+RBTree*  Root(RBTree *s){
+    RBTree* x=s;
+    while(x->padre!=NULL)
+        x=x->padre;
+    return x;
+
+}
+
+RBTree*  Tree_Succesor(RBTree *s){
+    RBTree* x=s, *y=NULL;
+    if(x->der!=NULL)
+        return Tree_Minimum(x);
+    y=x->padre;
+
+    while(y!=NULL && x==y->der){
+        x=y;
+        y=y->padre;
+    }
+    return y;
+}
+
+
+
+RBTree*  get_node(RBTree *s,int key){
+    RBTree*  x=s;
+    if(x->key==key){
+        return x;
+    }
+    else{
+        if(x->key >key){
+              if(x->izq!=NULL)
+                    return get_node(x->izq,key);
+                else
+                    return NULL;
+
+        }
+        else{
+            if(x->der!=NULL)
+                     return get_node(x->der,key);
+                else
+                    return NULL;
+        }
+    }
+}
 
 
 #endif
