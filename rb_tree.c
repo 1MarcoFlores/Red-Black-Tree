@@ -53,7 +53,7 @@ void put(Tree *s, int key, int val){
 		nodo->der=NULL;
 		nodo->padre=NULL;
 		nodo->color='R';
-		
+		//if(s->raiz==NULL){//Primer nodo
 		if(isEmpty(s)==-1){
 			s->raiz = nodo;
 			nodo->color='B';
@@ -217,7 +217,6 @@ int isEmpty (Tree *s){
 int size (Tree *s){
 	return s->nodos;
 }
-
 
 
 #endif
