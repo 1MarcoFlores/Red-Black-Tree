@@ -244,4 +244,59 @@ int contains(RBTree* root, int key)
 	return -1;
 }
 
+void DeleteFixUp(Tree* s, RBTree* x)
+{
+	while(x != s->raiz && x->color == 'B'){
+		if(x == x->padre->izq){
+			RBTree* w = x->padre->der;
+			if(w->color == 'R'){
+				w->color = 'B';
+				x->padre->color = 'R';
+				LeftRotate(s, x->padre);
+				w = x->padre->der;
+			}
+			if(w->izq->color == 'B' && w->der->color == 'B'){
+				w->color = 'R';
+				x = x->padre;
+			}
+			else if(w->der->color == 'B'){
+				w->izq->color = 'B';
+				w->color = 'R';
+				RightRotate(s, w);
+				w = x->padre->der;
+			}
+			w->color = x->padre->color;
+			x->padre->padre = 'B';
+			w->der->color = 'B';
+			LeftRotate(s, x->padre);
+			x -> s->raiz;
+		}
+		else{
+			RBTree* w = x->padre->izq;
+			if(w->color == 'R'){
+				w->color = 'B';
+				x->padre->color = 'R';
+				RightRotate(s, x->padre);
+				w = x->padre->izq;
+			}
+			if(w->izq->color == 'B' && w->der->color == 'B'){
+				w->color = 'R';
+				x = x->padre;
+			}
+			else if(w->izq->color == 'B'){
+				w->der->color = 'B';
+				w->color = 'R';
+				LeftRotate(s, w);
+				w = x->padre->izq;
+			}
+			w->color = x->padre->color;
+			x->padre->padre = 'B';
+			w->izq->color = 'B';
+			RightRotate(s, x->padre);
+			x -> s->raiz;
+		}
+	}
+	x->color = 'B';
+}
+
 #endif
