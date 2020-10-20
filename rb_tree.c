@@ -18,7 +18,7 @@ typedef struct strucRBTree{
 typedef struct strucTree{ 
 	unsigned int nodos;
 	RBTree *raiz;
-	//RBTree *nil;
+	RBTree *nil;
 }Tree;
 
 void put(Tree* s, int key, int data);
@@ -54,7 +54,7 @@ void put(Tree *s, int key, int val){
 		nodo->der=NULL;
 		nodo->padre=NULL;
 		nodo->color='R';
-		//if(s->raiz==NULL){//Primer nodo
+		
 		if(isEmpty(s)==-1){
 			s->raiz = nodo;
 			nodo->color='B';
