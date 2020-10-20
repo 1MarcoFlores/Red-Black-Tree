@@ -30,75 +30,79 @@ int isEmpty (Tree* s);
 int size (Tree* s);
 void InorderTree(Tree* s, RBTree* x);
 
-int get(RBTree* s, int key);
-int contains(RBTree* s, int key);
+int get(Tree* s, int key);
+int contains(Tree* s, int key);
 void Transplant(Tree* s, RBTree* u, RBTree* v);
-void delete (Tree* s, int key); 
+void delete (Tree* s, int key);
 void DeleteFixUp(Tree* s, RBTree* x);
 void freeTree(Tree* s);
 
 
 // Definiciones ========================================================
 
-void freeTree(Tree* s)
-{
-	free(s);
-}
+void put(Tree *s, int key, int val){
+	RBTree *nodo=NULL,*x=NULL,*y=NULL;
+	nodo=(RBTree *)malloc(sizeof(RBTree));
 
-void put(Tree* s, int key, int val){
-	RBTree* nodo = NULL;
-	RBTree* x = NULL;
-	RBTree* y = s->nil;
-	nodo = (RBTree*)malloc(sizeof(RBTree));
-
-	if(nodo != NULL){
+	if(nodo!=NULL){
+		
 		//Inicializar nodo nuevo
-		nodo->key = key;
-		nodo->data = val;
-		nodo->izq = s->nil;
-		nodo->der = s->nil;
-		nodo->padre = s->nil;
-		nodo->color = 'R';
+		nodo->key=key;
+		nodo->data=val;
+		nodo->izq=NULL;
+		nodo->der=NULL;
+		nodo->padre=NULL;
+		nodo->color='R';
 		//if(s->raiz==NULL){//Primer nodo
-		if(isEmpty(s) == -1){
+		if(isEmpty(s)==-1){
 			s->raiz = nodo;
 			nodo->color='B';
-		}
-		else{
-			x = s->raiz;
-			while (x != s->nil){
+			
+		}else{
+			
+			x=s->raiz;
+			
+			while (x != NULL){
 				y = x;
-				if(key < x->key) x = x->izq;
-				else x = x->der;
+				if(key < x->key){
+					x = x->izq;
+				}else{
+					x = x->der;
+				}
 			}
+			
 			nodo->padre=y;
 			
-			if (key < y->key) y->izq = nodo;
-			else y->der= nodo;
+			if (key < y->key){
+				y->izq = nodo;
+			}else{
+				y->der= nodo;
+			}
 			
 			InsertFixUp(s,nodo);
+			
 		}
-		s->nodos += 1;
-	}
-	else{
+		
+		s->nodos++;
+	
+	}else{
 		printf("Solicitud de memoria denegada\n");
 	}
 }
 
-void InsertFixUp(Tree* s, RBTree* z){
-	RBTree* y = s->nil;
+void InsertFixUp(Tree *s, RBTree *z){
+	RBTree *y=NULL;
 
     while(z->padre && z->padre->color == 'R'){
-        if(z->padre == z->padre->padre->izq){
+        if(z->padre==z->padre->padre->izq){
 			
             y = z->padre->padre->der;
-            if(y != s->nil && y->color == 'R'){
+            if(y && y->color == 'R'){
 				z->padre->color = 'B';
 				y->color = 'B';
 				z->padre->padre->color = 'R';
 				z = z->padre->padre;
-			}
-			else{
+			}else{
 				
 				if(z == z->padre->der) {
 					z = z->padre;
@@ -109,31 +113,34 @@ void InsertFixUp(Tree* s, RBTree* z){
 				z->padre->padre->color = 'R';
 				RightRotate(s,z->padre->padre);
 			}
-        }
-        else{
+        }else{
+			
 			y = z->padre->padre->izq;
-			if(y != s->nil && y->color == 'R'){
-				z->padre->color = 'B';
-				y->color = 'B';
-				z->padre->padre->color = 'R';
-				z = z->padre->padre;
-			}
-			else{
-				if(z == z->padre->izq) {
-					z = z->padre;
-					RightRotate(s,z);
+           
+				if(y && y->color == 'R'){
+					z->padre->color = 'B';
+					y->color = 'B';
+					z->padre->padre->color = 'R';
+					z = z->padre->padre;
+				}else{
+					if(z == z->padre->izq) {
+						z = z->padre;
+						RightRotate(s,z);
+					}
+					z->padre->color = 'B';
+					z->padre->padre->color = 'R';
+					LeftRotate(s,z->padre->padre);
 				}
-				z->padre->color = 'B';
-				z->padre->padre->color = 'R';
-				LeftRotate(s,z->padre->padre);
-			}
+			
 		}
 	}
+	
     s->raiz->color = 'B';
 }
 
-void LeftRotate(Tree* s, RBTree* x){
-	RBTree* y = s->nil;
+
+void LeftRotate(Tree *s, RBTree *x){
+	RBTree *y=NULL,*m;
 	
     if (!x || !x->der){
         return ;
@@ -142,20 +149,18 @@ void LeftRotate(Tree* s, RBTree* x){
     y = x->der;
     x->der = y->izq;
 
-    if(y->izq != s->nil){
+    if(y->izq != NULL){
         y->izq->padre = x;
 	}
 	
     y->padre = x->padre;
 
-    if(x->padre== s->nil){
+    if(x->padre== NULL){
         s->raiz=y;
-    }
-    else{
+    }else{
 		if(x == x->padre->izq){
 			x->padre->izq = y;
-		}
-		else{
+		}else{
 			x->padre->der = y;
 		}
 	}
@@ -164,28 +169,27 @@ void LeftRotate(Tree* s, RBTree* x){
     x->padre = y;
 }
 
+
 void RightRotate(Tree *s, RBTree *y){
-	RBTree* x = s->nil;
-	
+	RBTree *x=NULL,*m;
+
     if (!y || !y->izq)
-        return;
+        return ;
     
     x = y->izq;
     y->izq = x->der;
     
-    if(x->der != s->nil){
+    if(x->der!= NULL){
         x->der->padre = y;
     }
     
     x->padre = y->padre;
-    if(x->padre == s->nil){
-        s->raiz = x;
-    }
-    else{ 
+    if(x->padre == NULL){
+        s->raiz=x;
+    }else{ 
 		if(y == y->padre->izq){
 			y->padre->izq = x;
-		}
-		else{
+		}else{
 			y->padre->der = x;
 		}
 	}
@@ -195,7 +199,7 @@ void RightRotate(Tree *s, RBTree *y){
 
 //INORDER-TREE-WALK
 void InorderTree(Tree *s, RBTree *n){
-    if(n != s->nil){
+    if(n != NULL) {
 		InorderTree(s, n->izq);
 		printf("%c%d ",n->color, n->key);
 		InorderTree(s, n->der);
@@ -203,67 +207,53 @@ void InorderTree(Tree *s, RBTree *n){
 }
 
 int isEmpty (Tree *s){
-	if(size(s) == 0){
+	if(size(s)==0){
 		return -1;
-	}
-	else{
+	}else{
 		return 1;
 	}
 }
 
-int size(Tree* s){
+int size (Tree *s){
 	return s->nodos;
 }
 
-void Transplant(Tree* s, RBTree* u, RBTree* v)
+void delete(Tree *s, int key)
 {
-	if(u->padre == s->nil) s->raiz = v;
-	else if(u == u->padre->izq) u->padre->izq = v;
-	else u->padre->der = v;
-	v->padre = u->padre;
-}
-
-void delete(Tree *s, int key){
 	RBTree* y = NULL;
 	RBTree* z = NULL;
 	RBTree* x = NULL;
 	RBTree* m;
 	
 	char clr;
-	printf("do3 \n");
+	
 	z = s->raiz;
 	while(z != s->nil && z->key != key){
 		if(key < z->key) z = z->izq;
 		else z = z->der;
 	}
 	if(z == s->nil) return;
-	printf("do4 \n");
-	//z=SearchTRB(s->raiz,key);
+	s->nodos--;
+	
 	y = z;
 	clr = y->color;
 	
 	if(z->izq == s->nil){
-		printf("do5 \n");
-		printf("%d", z->key);
 		x = z->der;
 		Transplant(s, z, z->der);
 	}
 	else{
 		
 		if(z->der==s->nil){
-			printf("do4 \n");
 			x = z->izq;
 			Transplant(s,z,z->izq);
 		}
 		else{
-			printf("do7 \n");
 			m = z->der;
 			while(m->izq != s->nil){
 				m = m->izq;
 			}
 			
-			printf("%d\n", m->key);
-			printf("do9 \n");
 			y = m;
 			clr = y->color;
 			x = y->der;
@@ -277,7 +267,6 @@ void delete(Tree *s, int key){
 				y->der->padre=y;
 			}
 			
-			printf("do10 \n");
 			Transplant(s,z,y);
 			y->izq = z->izq;
 			y->izq->padre = y;
@@ -318,7 +307,6 @@ void DeleteFixUp(Tree* s, RBTree* x)
 			x->padre->color = 'B';
 			w->der->color = 'B';
 			LeftRotate(s, x->padre);
-			x = s->raiz;
 		}
 		else{
 			RBTree* w = x->padre->izq;
@@ -342,8 +330,63 @@ void DeleteFixUp(Tree* s, RBTree* x)
 			x->padre->color = 'B';
 			w->izq->color = 'B';
 			RightRotate(s, x->padre);
-			x = s->raiz;
 		}
 	}
-	x->color = 'B';
+	s->raiz->color = 'B';
 }
+
+int get(Tree* s, int key)
+{
+	RBTree* x = s->raiz;
+	while(x != s->nil){
+		if(key > x->key){
+			if(x->der != s->nil){
+				x = x->der;
+			}
+			else{
+				return 1/0.0;
+			}
+		}
+		else if(key < x->key){
+			if(x->izq != s->nil){
+				x = x->izq;
+			}
+			else{
+				return 1/0.0;
+			}
+		}
+		else{
+			return x->data;
+		}
+	}
+	return 1/0.0;
+}
+
+int contains(Tree* s, int key)
+{
+	RBTree* x = s->raiz;
+	while(x != s->nil){
+		if(key > x->key){
+			if(x->der != s->nil){
+				x = x->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < x->key){
+			if(x->izq != s->nil){
+				x = x->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return 0;
+		}
+	}
+	return -1;
+}
+
+#endif
