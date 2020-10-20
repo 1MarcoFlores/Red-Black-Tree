@@ -283,7 +283,7 @@ void delete(Tree *s, int key)
 		}
 		
 	}
-	//exit (-1);
+	
 	if(clr=='B'){
 		DeleteFixUp(s,x);
 	}
