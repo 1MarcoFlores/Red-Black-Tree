@@ -218,5 +218,187 @@ int size (Tree *s){
 	return s->nodos;
 }
 
+void Transplant(Tree* s, RBTree* u, RBTree* v)
+{
+	if(u->padre == s->nil) s->raiz = v;
+	else if(u == u->padre->izq) u->padre->izq = v;
+	else u->padre->der = v;
+	v->padre = u->padre;
+}
 
+void delete(Tree *s, int key)
+{
+	RBTree* y = NULL;
+	RBTree* z = NULL;
+	RBTree* x = NULL;
+	RBTree* m;
+	
+	char clr;
+	
+	z = s->raiz;
+	while(z != s->nil && z->key != key){
+		if(key < z->key) z = z->izq;
+		else z = z->der;
+	}
+	if(z == s->nil) return;
+	s->nodos--;
+	
+	y = z;
+	clr = y->color;
+	
+	if(z->izq == s->nil){
+		x = z->der;
+		Transplant(s, z, z->der);
+	}
+	else{
+		
+		if(z->der==s->nil){
+			x = z->izq;
+			Transplant(s,z,z->izq);
+		}
+		else{
+			m = z->der;
+			while(m->izq != s->nil){
+				m = m->izq;
+			}
+			
+			y = m;
+			clr = y->color;
+			x = y->der;
+			
+			if(y->padre == z){
+				x->padre = y;
+			}
+			else{
+				Transplant(s,y,y->der);
+				y->der=z->der;
+				y->der->padre=y;
+			}
+			
+			Transplant(s,z,y);
+			y->izq = z->izq;
+			y->izq->padre = y;
+			y->color = z->color;
+			
+		}
+		
+	}
+	//exit (-1);
+	if(clr=='B'){
+		DeleteFixUp(s,x);
+	}
+	
+}
+
+void DeleteFixUp(Tree* s, RBTree* x)
+{
+	while(x != s->raiz && x->color == 'B'){
+		if(x == x->padre->izq){
+			RBTree* w = x->padre->der;
+			if(w->color == 'R'){
+				w->color = 'B';
+				x->padre->color = 'R';
+				LeftRotate(s, x->padre);
+				w = x->padre->der;
+			}
+			if(w->izq->color == 'B' && w->der->color == 'B'){
+				w->color = 'R';
+				x = x->padre;
+			}
+			else if(w->der->color == 'B'){
+				w->izq->color = 'B';
+				w->color = 'R';
+				RightRotate(s, w);
+				w = x->padre->der;
+			}
+			w->color = x->padre->color;
+			x->padre->color = 'B';
+			w->der->color = 'B';
+			LeftRotate(s, x->padre);
+		}
+		else{
+			RBTree* w = x->padre->izq;
+			if(w->color == 'R'){
+				w->color = 'B';
+				x->padre->color = 'R';
+				RightRotate(s, x->padre);
+				w = x->padre->izq;
+			}
+			if(w->izq->color == 'B' && w->der->color == 'B'){
+				w->color = 'R';
+				x = x->padre;
+			}
+			else if(w->izq->color == 'B'){
+				w->der->color = 'B';
+				w->color = 'R';
+				LeftRotate(s, w);
+				w = x->padre->izq;
+			}
+			w->color = x->padre->color;
+			x->padre->color = 'B';
+			w->izq->color = 'B';
+			RightRotate(s, x->padre);
+		}
+	}
+	s->raiz->color = 'B';
+}
+
+int get(Tree* s, int key)
+{
+	RBTree* x = s->raiz;
+	while(x != s->nil){
+		if(key > x->key){
+			if(x->der != s->nil){
+				x = x->der;
+			}
+			else{
+				return 1/0.0;
+			}
+		}
+		else if(key < x->key){
+			if(x->izq != s->nil){
+				x = x->izq;
+			}
+			else{
+				return 1/0.0;
+			}
+		}
+		else{
+			return x->data;
+		}
+	}
+	return 1/0.0;
+}
+
+int contains(Tree* s, int key)
+{
+	RBTree* x = s->raiz;
+	while(x != s->nil){
+		if(key > x->key){
+			if(x->der != s->nil){
+				x = x->der;
+			}
+			else{
+				return -1;
+			}
+		}
+		else if(key < x->key){
+			if(x->izq != s->nil){
+				x = x->izq;
+			}
+			else{
+				return -1;
+			}
+		}
+		else{
+			return 0;
+		}
+	}
+	return -1;
+}
+
+void freeTree(Tree* s)
+{
+	free(s);
+}
 #endif
