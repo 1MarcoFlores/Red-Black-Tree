@@ -32,7 +32,11 @@ void InorderTree(Tree *s, RBTree *x);
 
 int get(RBTree* s, int key);
 int contains(RBTree* s, int key);
-void delete(RBTree* s, int key);
+void Transplant(Tree *s, RBTree *u, RBTree *v);
+void delete (Tree *s, int key); 
+void DeleteFixUp(Tree *s, RBTree *x);
+RBTree *Minimum(RBTree *x);
+RBTree *SearchTRB(RBTree *x, int k);
 
 
 // Definiciones ========================================================
