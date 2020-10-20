@@ -215,4 +215,130 @@ int size (Tree *s){
 	return s->nodos;
 }
 
+void delete(Tree *s, int key){
+	RBTree *y=NULL,*z=NULL,*x=NULL, *m;
+	char clr;
+	printf("do3 \n");
+	z=s->raiz;
+	while(z!=s->nil && z->key!=key){
+		if(key < z->key)
+			z=z->izq;
+		else
+			z=z->der;
+	}
+	printf("do4 \n");
+	//z=SearchTRB(s->raiz,key);
+	y=z;
+	
+	clr=y->color;
+	
+	if(z->izq==s->nil){
+		printf("do5 \n");
+		x=z->der;
+		Transplant(s,z,z->der);
+		
+	}else{
+		
+		if(z->der==s->nil){
+			printf("do4 \n");
+			x=z->izq;
+			Transplant(s,z,z->izq);
+		}else{
+			printf("do7 \n");
+			m=z->der;
+			while(m->izq!=s->nil){
+				m = m->izq;
+			}
+			
+			
+			printf("do9 \n");
+			y=m;
+			//y=Minimum(z->der);
+				clr=y->color;
+			x=y->der;
+			
+			
+			if(y->padre==z){
+				x->padre=y;
+			}else{
+				Transplant(s,y,y->der);
+				y->der=z->der;
+				y->der->padre=y;
+			}
+			
+			printf("do10 \n");
+			Transplant(s,z,y);
+			y->izq=z->izq;
+			y->izq->padre=y;
+			y->color=z->color;
+			
+		}
+		
+	}
+	//exit (-1);
+	if(clr=='B'){
+		DeleteFixUp(s,x);
+	}
+	
+}
+
+void DeleteFixUp(Tree *s, RBTree *x){
+	RBTree *w=NULL;
+	while(x != s->raiz && x->color == 'B'){
+		if(x == x->padre->izq) {
+			w = x->padre->der;
+			if(w->color == 'R') {
+				w->color = 'B';
+				x->padre->color = 'R';
+				LeftRotate(s, x->padre);
+				w = x->padre->der;
+			}
+			if(w->izq->color == 'B' && w->der->color == 'B'){
+				w->color = 'R';
+				x = x->padre;
+			}
+			else {
+				if(w->der->color == 'B'){
+					w->izq->color = 'B';
+					w->color = 'R';
+					RightRotate(s, w);
+					w = x->padre->der;
+				}
+				w->color = x->padre->color;
+				x->padre->color = 'B';
+				w->der->color = 'B';
+				LeftRotate(s, x->padre);
+				x = s->raiz;
+			}
+		}
+		else {
+			w = x->padre->izq;
+			if(w->color == 'R') {
+				w->color = 'B';
+				x->padre->color = 'R';
+				RightRotate(s, x->padre);
+				w = x->padre->izq;
+			}
+			if(w->der->color == 'B' && w->izq->color == 'B') {
+				w->color = 'R';
+				x = x->padre;
+			}
+			else {
+				if(w->izq->color == 'B'){
+					w->der->color = 'B';
+					w->color = 'R';
+					LeftRotate(s, w);
+					w = x->padre->izq;
+				}
+				w->color = x->padre->color;
+				x->padre->color = 'B';
+				w->izq->color = 'B';
+				RightRotate(s, x->padre);
+				x = s->raiz;
+			}
+		}
+	}
+	x->color = 'B';
+}
+
 #endif
