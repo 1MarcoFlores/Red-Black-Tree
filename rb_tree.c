@@ -10,33 +10,32 @@ typedef struct strucRBTree{
 	int key;
 	int data;	
 	char color; 
-	struct strucRBTree *padre;
-	struct strucRBTree *izq;
-	struct strucRBTree *der;
+	struct strucRBTree* padre;
+	struct strucRBTree* izq;
+	struct strucRBTree* der;
 }RBTree;
 
 typedef struct strucTree{ 
 	unsigned int nodos;
-	RBTree *raiz;
-	RBTree *nil;
+	RBTree* raiz;
+	RBTree* nil;
 }Tree;
 
 void put(Tree* s, int key, int data);
-void InsertFixUp(Tree *s, RBTree *z);
-void LeftRotate(Tree *s, RBTree *x);
-void RightRotate(Tree *s, RBTree *y);
+void InsertFixUp(Tree* s, RBTree* z);
+void LeftRotate(Tree* s, RBTree* x);
+void RightRotate(Tree* s, RBTree* y);
 
-int isEmpty (Tree *s); 
-int size (Tree *s);
-void InorderTree(Tree *s, RBTree *x);
+int isEmpty (Tree* s);
+int size (Tree* s);
+void InorderTree(Tree* s, RBTree* x);
 
-int get(RBTree* s, int key);
-int contains(RBTree* s, int key);
-void Transplant(Tree *s, RBTree *u, RBTree *v);
-void delete (Tree *s, int key); 
-void DeleteFixUp(Tree *s, RBTree *x);
-RBTree *Minimum(RBTree *x);
-RBTree *SearchTRB(RBTree *x, int k);
+int get(Tree* s, int key);
+int contains(Tree* s, int key);
+void Transplant(Tree* s, RBTree* u, RBTree* v);
+void delete (Tree* s, int key);
+void DeleteFixUp(Tree* s, RBTree* x);
+void freeTree(Tree* s);
 
 
 // Definiciones ========================================================
