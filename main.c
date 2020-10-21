@@ -16,7 +16,6 @@ int main(int argc, char **argv)
 			arblRB->raiz=NULL;
 			arblRB->nil=(RBTree *)malloc(sizeof(RBTree));
 			arblRB->nil->color='B';
-			arblRB->raiz->padre=arblRB->nil;
 			arblRB->nodos=0;
 		}
 	
