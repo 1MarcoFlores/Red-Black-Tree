@@ -14,15 +14,15 @@ int main(int argc, char **argv)
 	arblRB=(Tree *)malloc(sizeof(Tree));
 		if(arblRB!=NULL){
 			arblRB->raiz=NULL;
-			//arblRB->nil=(RBTree *)malloc(sizeof(RBTree));
-			//arblRB->nil->color='M';
+			arblRB->nil=(RBTree *)malloc(sizeof(RBTree));
+			arblRB->nil->color='B';
+			arblRB->raiz->padre=arblRB->nil;
 			arblRB->nodos=0;
 		}
 	
 	for(i = 0; i < N; i++){
 		put(arblRB,random()%20,i);
 		InorderTree(arblRB,arblRB->raiz);
-		printf(" i=%d\n",i);
 		printf("nodo padre%d\n",arblRB->raiz->key);
 	}
 	InorderTree(arblRB,arblRB->raiz);
